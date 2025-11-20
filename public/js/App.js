@@ -1,5 +1,6 @@
 function App() {
   const [affirmation, setAffirmation] = React.useState('');
+  const [activeTab, setActiveTab] = React.useState('affirmations');
   const [loading, setLoading] = React.useState(true);
   const [counter, setCounter] = React.useState(null);
   const [user, setUser] = React.useState(null);
@@ -73,17 +74,25 @@ function App() {
 
   return (
     <>
-      <Header user={user} />
-      <AffirmationBox
-        affirmation={affirmation}
-        loading={loading}
-        counter={counter}
-        onGetAnother={fetchAffirmation}
+      <h1 className="page-title">A Little Something</h1>
+      <Navbar 
+        user={user}
+        onLogout={handleLogout}
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
       />
-      <button onClick={handleLogout} className="logout-btn">
-        Logout
-      </button>
-      <Footer />
+
+      {activeTab === 'affirmations' && (
+        <AffirmationBox
+          affirmation={affirmation}
+          loading={loading}
+          counter={counter}
+          onGetAnother={fetchAffirmation}
+        />
+      )}
+
+      {activeTab === 'notes' && <Notes username={user.username} />}
+      {activeTab === 'tijori' && <Tijori username={user.username} />}
     </>
   );
 }

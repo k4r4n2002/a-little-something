@@ -25,7 +25,7 @@ function App() {
   return (
     <React.Fragment>
       <div className="rose-icon">🌹</div>
-      <h1>A Little Something</h1>
+      {/* <h1>A Little Something</h1> */}
       <div className="affirmation-box">
         {loading ? (
           <p className="loading">Loading...</p>

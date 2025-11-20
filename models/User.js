@@ -19,6 +19,15 @@ const userSchema = new mongoose.Schema({
     type: Number,
     default: null
   },
+  notes: {
+    type: String,
+    default: ''
+  },
+  // Base64-encoded images for the Tijori feature (max 2)
+  tijoriImages: {
+    type: [String],
+    default: []
+  },
   createdAt: {
     type: Date,
     default: Date.now

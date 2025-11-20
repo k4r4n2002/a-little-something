@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
 
-const Navbar = ({ user, onLogout, activeTab, setActiveTab }) => {
-  const [showTooltip, setShowTooltip] = useState(false);
+function Navbar({ user, onLogout, activeTab, setActiveTab }) {
+    const [showTooltip, setShowTooltip] = React.useState(false);
 
   const handleLogout = async () => {
     try {
@@ -14,20 +13,26 @@ const Navbar = ({ user, onLogout, activeTab, setActiveTab }) => {
 
   return (
     <nav className="navbar">
-      <div className="navbar-brand">A Little Something</div>
+      {/* <div className="navbar-brand">A Little Something</div> */}
       
       <div className="navbar-tabs">
         <button 
-          className={`tab ${activeTab === 'home' ? 'active' : ''}`}
-          onClick={() => setActiveTab('home')}
+          className={`tab ${activeTab === 'affirmations' ? 'active' : ''}`}
+          onClick={() => setActiveTab('affirmations')}
         >
-          Home
+          Affirmations
         </button>
         <button 
-          className={`tab ${activeTab === 'tictactoe' ? 'active' : ''}`}
-          onClick={() => setActiveTab('tictactoe')}
+          className={`tab ${activeTab === 'notes' ? 'active' : ''}`}
+          onClick={() => setActiveTab('notes')}
         >
-          Tic Tac Toe
+          Notes
+        </button>
+        <button 
+          className={`tab ${activeTab === 'tijori' ? 'active' : ''}`}
+          onClick={() => setActiveTab('tijori')}
+        >
+          Tijori
         </button>
       </div>
 
@@ -37,12 +42,11 @@ const Navbar = ({ user, onLogout, activeTab, setActiveTab }) => {
           onMouseEnter={() => setShowTooltip(true)}
           onMouseLeave={() => setShowTooltip(false)}
         >
-          {user.displayName ? user.displayName.charAt(0).toUpperCase() : 'U'}
+          <span className="material-icons user-icon">account_circle</span>
           {showTooltip && (
             <div className="user-tooltip">
               <div className="user-info">
                 <div className="user-name">{user.displayName || user.username}</div>
-                <div className="user-email">{user.username}@example.com</div>
               </div>
               <button onClick={handleLogout} className="logout-button">
                 Logout
@@ -53,6 +57,4 @@ const Navbar = ({ user, onLogout, activeTab, setActiveTab }) => {
       </div>
     </nav>
   );
-};
-
-export default Navbar;
+}

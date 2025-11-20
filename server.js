@@ -6,13 +6,16 @@ const cookieParser = require('cookie-parser');
 const bcrypt = require('bcrypt');
 const authRoutes = require('./routes/auth');
 const affirmationRoutes = require('./routes/affirmations');
+const commonRoutes = require('./routes/common');
+const tijoriRoutes = require('./routes/tijori');
 const User = require('./models/User');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
-app.use(express.json());
+// Increase JSON body limit to handle base64-encoded images (≈1-2 MB each)
+app.use(express.json({ limit: '10mb' }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -71,6 +74,8 @@ mongoose.connect(process.env.MONGODB_URI)
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api', affirmationRoutes);
+app.use('/api/common', commonRoutes);
+app.use('/api/tijori', tijoriRoutes);
 
 // Serve frontend
 app.get('/', (req, res) => {
