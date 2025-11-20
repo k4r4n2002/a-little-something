@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>A Little Something</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+  <div id="root"></div>
+
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  
+  <script type="text/babel" src="/js/components/Header.js"></script>
+  <script type="text/babel" src="/js/components/AffirmationBox.js"></script>
+  <script type="text/babel" src="/js/components/Footer.js"></script>
+  <script type="text/babel" src="/js/App.js"></script>
+</body>
+</html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>A Little Something</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+        background: linear-gradient(135deg, #ffeef8 0%, #ffe5f1 50%, #ffd6ea 100%);
+        padding: 1rem;
+      }
+
+      #root {
+        text-align: center;
+        background: rgba(255, 255, 255, 0.95);
+        padding: 2.5rem 2rem;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(219, 112, 147, 0.3);
+        max-width: 550px;
+        width: 100%;
+        position: relative;
+        border: 2px solid rgba(255, 182, 193, 0.3);
+      }
+
+      .rose-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        animation: float 3s ease-in-out infinite;
+      }
+
+      @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+      }
+
+      h1 {
+        font-size: 1.75rem;
+        color: #d1477a;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+      }
+
+      .greeting {
+        color: #888;
+        font-size: 0.95rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .affirmation-box {
+        background: linear-gradient(135deg, #fff0f5 0%, #ffe4f0 100%);
+        padding: 2rem 1.5rem;
+        border-radius: 15px;
+        margin: 1.5rem 0;
+        min-height: 120px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid rgba(255, 182, 193, 0.4);
+      }
+
+      p {
+        font-size: 1.35rem;
+        color: #555;
+        line-height: 1.6;
+        font-style: italic;
+      }
+
+      .loading {
+        color: #d1477a;
+        font-style: normal;
+      }
+
+      button {
+        background: linear-gradient(135deg, #ff6b9d 0%, #ff8fab 100%);
+        color: #fff;
+        border: none;
+        padding: 1rem 2rem;
+        font-size: 1.1rem;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(255, 107, 157, 0.4);
+        font-weight: 600;
+        margin: 0.5rem;
+      }
+
+      button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(255, 107, 157, 0.6);
+        background: linear-gradient(135deg, #ff8fab 0%, #ffa3bd 100%);
+      }
+
+      button:active {
+        transform: translateY(0);
+      }
+
+      button:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+
+      .logout-btn {
+        background: linear-gradient(135deg, #ff9999 0%, #ffb3b3 100%);
+        padding: 0.75rem 1.5rem;
+        font-size: 0.95rem;
+      }
+
+      .counter {
+        color: #d1477a;
+        font-size: 0.9rem;
+        margin: 0.5rem 0 1rem 0;
+        font-weight: 500;
+        opacity: 0.8;
+      }
+
+      .footer {
+        margin-top: 2rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid rgba(255, 182, 193, 0.3);
+        color: #d1477a;
+        font-size: 0.85rem;
+        font-style: italic;
+      }
+
+      .footer .heart {
+        color: #ff6b9d;
+        display: inline-block;
+        animation: heartbeat 1.5s ease-in-out infinite;
+      }
+
+      @keyframes heartbeat {
+        0%, 100% { transform: scale(1); }
+        10%, 30% { transform: scale(1.1); }
+        20%, 40% { transform: scale(1); }
+      }
+
+      @media (max-width: 600px) {
+        #root {
+          padding: 2rem 1.5rem;
+        }
+
+        h1 {
+          font-size: 1.5rem;
+        }
+
+        p {
+          font-size: 1.15rem;
+        }
+
+        button {
+          padding: 0.875rem 1.75rem;
+          font-size: 1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script type="text/babel">
+      function App() {
+        const [affirmation, setAffirmation] = React.useState('');
+        const [loading, setLoading] = React.useState(true);
+        const [counter, setCounter] = React.useState(null);
+        const [user, setUser] = React.useState(null);
+        const [checking, setChecking] = React.useState(true);
+
+        const checkAuth = async () => {
+          try {
+            const response = await fetch('/api/auth/me');
+            if (response.ok) {
+              const data = await response.json();
+              setUser(data);
+              return true;
+            } else {
+              window.location.href = '/login';
+              return false;
+            }
+          } catch (err) {
+            window.location.href = '/login';
+            return false;
+          } finally {
+            setChecking(false);
+          }
+        };
+
+        const fetchAffirmation = async () => {
+          try {
+            setLoading(true);
+            const response = await fetch('/api/affirmation');
+            
+            if (response.status === 401) {
+              window.location.href = '/login';
+              return;
+            }
+
+            const data = await response.json();
+            setAffirmation(data.text);
+            setCounter({ number: data.number, total: data.total });
+          } catch (err) {
+            setAffirmation('Oops! Unable to fetch affirmation. Please try again.');
+            setCounter(null);
+          } finally {
+            setLoading(false);
+          }
+        };
+
+        const handleLogout = async () => {
+          try {
+            await fetch('/api/auth/logout', { method: 'POST' });
+            window.location.href = '/login';
+          } catch (err) {
+            console.error('Logout error:', err);
+          }
+        };
+
+        React.useEffect(() => {
+          checkAuth().then(isAuth => {
+            if (isAuth) {
+              fetchAffirmation();
+            }
+          });
+        }, []);
+
+        if (checking) {
+          return (
+            <React.Fragment>
+              <div className="rose-icon">🌹</div>
+              <p className="loading">Loading...</p>
+            </React.Fragment>
+          );
+        }
+
+        return (
+          <React.Fragment>
+            <div className="rose-icon">🌹</div>
+            <h1>A Little Something</h1>
+            {user && (
+              <p className="greeting">Hello, {user.displayName}! 💕</p>
+            )}
+            <div className="affirmation-box">
+              {loading ? (
+                <p className="loading">Loading...</p>
+              ) : (
+                <p>"{affirmation}"</p>
+              )}
+            </div>
+            {counter && (
+              <div className="counter">{counter.number} of {counter.total}</div>
+            )}
+            <button onClick={fetchAffirmation} disabled={loading}>
+              Get Another Something
+            </button>
+            <button onClick={handleLogout} className="logout-btn">
+              Logout
+            </button>
+            <div className="footer">
+              Made with <span className="heart">♥</span> by Karan, just for Khushi
+            </div>
+          </React.Fragment>
+        );
+      }
+
+      const root = ReactDOM.createRoot(document.getElementById('root'));
+      root.render(<App />);
+    </script>
+  </body>
+</html>
