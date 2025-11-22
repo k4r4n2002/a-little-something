@@ -4,50 +4,38 @@ const auth = require('../middleware/auth');
 const User = require('../models/User');
 
 // GET all notes (from both users)
+// GET all notes (from both users)
 router.get('/notes', auth, async (req, res) => {
   try {
-    const karan = await User.findOne({ username: 'karan' }).select('notes notesList');
-    const khushi = await User.findOne({ username: 'khushi' }).select('notes notesList');
+    const karan = await User.findOne({ username: 'karan' }).select('notesList');
+    const khushi = await User.findOne({ username: 'khushi' }).select('notesList');
     
     let allNotes = [];
     
-    // Add Karan's notes
-    if (karan) {
-      // Legacy note without timestamp
-      if (karan.notes) {
-        allNotes.push({
-          content: karan.notes,
-          author: 'karan',
-          timestamp: null
-        });
-      }
-      // New notes with timestamps
-      if (karan.notesList && karan.notesList.length > 0) {
-        allNotes = allNotes.concat(karan.notesList.map(note => ({
-          ...note,
-          author: 'karan'
-        })));
-      }
+    // Collect all timestamped notes from both users
+    let timestampedNotes = [];
+    
+    // Add Karan's timestamped notes
+    if (karan && karan.notesList && karan.notesList.length > 0) {
+      timestampedNotes = timestampedNotes.concat(karan.notesList.map(note => ({
+        content: note.content,
+        author: 'karan',
+        timestamp: note.timestamp
+      })));
     }
     
-    // Add Khushi's notes
-    if (khushi) {
-      // Legacy note without timestamp
-      if (khushi.notes) {
-        allNotes.push({
-          content: khushi.notes,
-          author: 'khushi',
-          timestamp: null
-        });
-      }
-      // New notes with timestamps
-      if (khushi.notesList && khushi.notesList.length > 0) {
-        allNotes = allNotes.concat(khushi.notesList.map(note => ({
-          ...note,
-          author: 'khushi'
-        })));
-      }
+    // Add Khushi's timestamped notes
+    if (khushi && khushi.notesList && khushi.notesList.length > 0) {
+      timestampedNotes = timestampedNotes.concat(khushi.notesList.map(note => ({
+        content: note.content,
+        author: 'khushi',
+        timestamp: note.timestamp
+      })));
     }
+    
+    // Sort all timestamped notes by date (newest first)
+    timestampedNotes.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+    allNotes = timestampedNotes;
     
     return res.json({ notes: allNotes });
   } catch (err) {
