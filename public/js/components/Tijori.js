@@ -1,10 +1,8 @@
 function Tijori({ username }) {
-  const isKaran = username === 'karan';
-  // Always keep exactly two slots
-  const [images, setImages] = React.useState(['', '']);
+  const [images, setImages] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
-  const [saving, setSaving] = React.useState(false);
-  const [expanded, setExpanded] = React.useState(null); // null or index 0/1
+  const [uploading, setUploading] = React.useState(false);
+  const [expanded, setExpanded] = React.useState(null);
 
   // Fetch existing images on mount
   React.useEffect(() => {
@@ -13,9 +11,7 @@ function Tijori({ username }) {
         const res = await fetch('/api/tijori');
         if (res.ok) {
           const data = await res.json();
-          const fetched = Array.isArray(data.images) ? data.images : [];
-          // Ensure array has length 2
-          setImages([fetched[0] || '', fetched[1] || '']);
+          setImages(Array.isArray(data.images) ? data.images : []);
         }
       } catch (err) {
         console.error('Error fetching Tijori images', err);
@@ -27,90 +23,82 @@ function Tijori({ username }) {
     fetchImages();
   }, []);
 
-  // Handle file selection for a specific slot
-  const handleFileChange = (index, e) => {
+  // Handle file selection
+  const handleFileChange = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    
+    setUploading(true);
     const reader = new FileReader();
-    reader.onload = () => {
+    reader.onload = async () => {
       const base64 = reader.result;
-      setImages(prev => {
-        const next = [...prev];
-        next[index] = base64;
-        return next;
-      });
+      try {
+        const res = await fetch('/api/tijori', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ image: base64 })
+        });
+        
+        if (res.ok) {
+          const data = await res.json();
+          setImages(data.images || []);
+        }
+      } catch (err) {
+        console.error('Error uploading image', err);
+      } finally {
+        setUploading(false);
+      }
     };
     reader.readAsDataURL(file);
   };
 
-  const handleSave = async (imgArr) => {
-    if (!isKaran) return;
-    setSaving(true);
-    try {
-      await fetch('/api/tijori', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ images: imgArr })
-      });
-    } catch (err) {
-      console.error('Error saving Tijori images', err);
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  // Auto-save on images change (debounced by 500ms)
-  React.useEffect(() => {
-    if (!isKaran) return;
-    const timer = setTimeout(() => {
-      if (!loading) {
-        handleSave(images);
-      }
-    }, 500);
-    return () => clearTimeout(timer);
-  }, [images]);
-
   if (loading) {
     return <p className="loading">Loading Tijori...</p>;
   }
+
+  // Sort images by upload time (newest first)
+  const sortedImages = [...images].sort((a, b) => {
+    return new Date(b.uploadedAt) - new Date(a.uploadedAt);
+  });
 
   return (
     <div className="tijori-container">
       <h2>Tijori</h2>
 
       <div className="tijori-slots">
-        {[0, 1].map((slot) => {
-          const hasImage = images[slot];
-          return (
-            <div className="tijori-slot" key={slot}>
-              {hasImage ? (
-                <img
-                  src={images[slot]}
-                  alt={`memory ${slot + 1}`}
-                  className="tijori-img"
-                  onClick={() => setExpanded(slot)}
-                />
-              ) : (
-                isKaran && (
-                  <label className="tijori-placeholder">
-                    <span className="plus">+</span>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => handleFileChange(slot, e)}
-                    />
-                  </label>
-                )
-              )}
-            </div>
-          );
-        })}
+        {sortedImages.map((img, idx) => (
+          <div 
+            className="tijori-slot" 
+            key={idx}
+          >
+            <img
+              src={img.data}
+              alt={`memory ${idx + 1}`}
+              className={`tijori-img ${img.uploadedBy === 'karan' ? 'border-karan' : 'border-khushi'}`}
+              onClick={() => setExpanded(idx)}
+            />
+          </div>
+        ))}
+        
+        {/* Always show one upload placeholder */}
+        <div className="tijori-slot">
+          <label className="tijori-placeholder">
+            <span className="plus">{uploading ? '⏳' : '+'}</span>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              disabled={uploading}
+            />
+          </label>
+        </div>
       </div>
-      {saving && <p className="saving">Saving...</p>}
 
-      {expanded !== null && images[expanded] && (
+      {uploading && <p className="saving">Uploading...</p>}
+
+      {expanded !== null && sortedImages[expanded] && (
         <div className="tijori-modal" onClick={() => setExpanded(null)}>
-          <img src={images[expanded]} alt="expanded" />
+          <img src={sortedImages[expanded].data} alt="expanded" />
         </div>
       )}
     </div>

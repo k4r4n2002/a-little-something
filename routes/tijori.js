@@ -3,42 +3,70 @@ const router = express.Router();
 const auth = require('../middleware/auth');
 const User = require('../models/User');
 
-// GET existing Tijori images (max two) for the special user (karan)
+// GET all Tijori images (from both users)
 router.get('/', auth, async (req, res) => {
   try {
-    // Only Karan & Khushi are allowed to view, but upload restricted to Karan
-    const userDoc = await User.findOne({ username: 'karan' }).select('tijoriImages');
-    if (!userDoc) {
-      return res.status(404).json({ error: 'User not found' });
+    const karan = await User.findOne({ username: 'karan' }).select('tijoriImages');
+    const khushi = await User.findOne({ username: 'khushi' }).select('tijoriImages');
+    
+    let allImages = [];
+    
+    // Add Karan's images
+    if (karan && karan.tijoriImages) {
+      allImages = allImages.concat(karan.tijoriImages);
     }
-    return res.json({ images: userDoc.tijoriImages || [] });
+    
+    // Add Khushi's images
+    if (khushi && khushi.tijoriImages) {
+      allImages = allImages.concat(khushi.tijoriImages);
+    }
+    
+    return res.json({ images: allImages });
   } catch (err) {
     console.error('Error fetching Tijori images:', err);
     return res.status(500).json({ error: 'Server error' });
   }
 });
 
-// POST to save/replace Tijori images – only allowed for Karan
+// POST to add a new Tijori image
 router.post('/', auth, async (req, res) => {
-  if (req.user?.username !== 'karan') {
-    return res.status(403).json({ error: 'Not authorised' });
-  }
+  const { image } = req.body;
 
-  const { images } = req.body; // expected array of base64 strings (length ≤ 2)
-
-  if (!Array.isArray(images) || images.length === 0 || images.length > 2) {
-    return res.status(400).json({ error: 'Provide 1 or 2 base64-encoded images' });
+  if (!image || typeof image !== 'string') {
+    return res.status(400).json({ error: 'Provide a valid base64-encoded image' });
   }
 
   try {
+    const newImage = {
+      data: image,
+      uploadedBy: req.user.username,
+      uploadedAt: new Date()
+    };
+    
+    // Add image to the current user's tijoriImages array
     await User.findOneAndUpdate(
-      { username: 'karan' },
-      { tijoriImages: images },
-      { upsert: false }
+      { username: req.user.username },
+      { $push: { tijoriImages: newImage } },
+      { new: true, upsert: false }
     );
-    return res.json({ success: true });
+    
+    // Fetch all images from both users
+    const karan = await User.findOne({ username: 'karan' }).select('tijoriImages');
+    const khushi = await User.findOne({ username: 'khushi' }).select('tijoriImages');
+    
+    let allImages = [];
+    
+    if (karan && karan.tijoriImages) {
+      allImages = allImages.concat(karan.tijoriImages);
+    }
+    
+    if (khushi && khushi.tijoriImages) {
+      allImages = allImages.concat(khushi.tijoriImages);
+    }
+    
+    return res.json({ success: true, images: allImages });
   } catch (err) {
-    console.error('Error saving Tijori images:', err);
+    console.error('Error saving Tijori image:', err);
     return res.status(500).json({ error: 'Server error' });
   }
 });
