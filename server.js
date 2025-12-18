@@ -8,6 +8,7 @@ const authRoutes = require('./routes/auth');
 const affirmationRoutes = require('./routes/affirmations');
 const commonRoutes = require('./routes/common');
 const tijoriRoutes = require('./routes/tijori');
+const birthdayRoutes = require('./routes/birthday');
 const User = require('./models/User');
 
 const app = express();
@@ -27,12 +28,20 @@ const setupDefaultUsers = async () => {
     if (existingUsers.length === 0) {
       console.log('📝 No users found. Creating default users...');
       
-      // Create Karan's account
+      // Create Karan's account with default birthday message
       const karanPassword = await bcrypt.hash('ksm291200', 10);
       await User.create({
         username: 'karan',
         password: karanPassword,
-        displayName: 'Karan'
+        displayName: 'Karan',
+        birthdayMessage: `Happy Birthday, my love! 🎉💕
+
+On this special day, I want you to know how incredibly grateful I am to have you in my life. You bring so much joy, warmth, and love into every moment we share.
+
+May this year bring you endless happiness, beautiful memories, and all the love your heart can hold. You deserve the world and so much more! 🌹❄️
+
+With all my love,
+Karan`
       });
       console.log('✅ Created Karan\'s account');
       
@@ -76,6 +85,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api', affirmationRoutes);
 app.use('/api/common', commonRoutes);
 app.use('/api/tijori', tijoriRoutes);
+app.use('/api/birthday', birthdayRoutes);
 
 // Serve frontend
 app.get('/', (req, res) => {

@@ -6,6 +6,59 @@ function App() {
   const [user, setUser] = React.useState(null);
   const [checking, setChecking] = React.useState(true);
 
+  // Create snowflakes
+  React.useEffect(() => {
+    const createSnowflake = () => {
+      const snowflake = document.createElement('div');
+      snowflake.className = 'snowflake';
+      snowflake.innerHTML = '❄️';
+      snowflake.style.left = Math.random() * 100 + '%';
+      snowflake.style.fontSize = (Math.random() * 10 + 15) + 'px';
+      snowflake.style.animationDuration = (Math.random() * 3 + 5) + 's';
+      snowflake.style.animationDelay = Math.random() * 5 + 's';
+      document.body.appendChild(snowflake);
+      
+      setTimeout(() => {
+        snowflake.remove();
+      }, 10000);
+    };
+
+    // Create initial snowflakes
+    for (let i = 0; i < 15; i++) {
+      setTimeout(createSnowflake, i * 300);
+    }
+
+    // Create new snowflakes periodically
+    const interval = setInterval(createSnowflake, 800);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  // Create floating roses in background
+  React.useEffect(() => {
+    const createRose = () => {
+      const rose = document.createElement('div');
+      rose.className = 'rose-bg';
+      rose.innerHTML = '🌹';
+      rose.style.left = Math.random() * 100 + '%';
+      rose.style.top = Math.random() * 100 + '%';
+      document.body.appendChild(rose);
+
+      setTimeout(() => {
+        rose.remove();
+      }, 20000);
+    };
+
+    // Create roses
+    for (let i = 0; i < 5; i++) {
+      setTimeout(createRose, i * 1000);
+    }
+
+    const interval = setInterval(createRose, 4000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   const checkAuth = async () => {
     try {
       const response = await fetch('/api/auth/me');
@@ -93,6 +146,7 @@ function App() {
 
       {activeTab === 'notes' && <Notes username={user.username} />}
       {activeTab === 'tijori' && <Tijori username={user.username} />}
+      {activeTab === 'birthday' && <Birthday />}
     </>
   );
 }

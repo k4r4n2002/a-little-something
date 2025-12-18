@@ -1,6 +1,5 @@
-
 function Navbar({ user, onLogout, activeTab, setActiveTab }) {
-    const [showTooltip, setShowTooltip] = React.useState(false);
+  const [showTooltip, setShowTooltip] = React.useState(false);
 
   const handleLogout = async () => {
     try {
@@ -13,26 +12,30 @@ function Navbar({ user, onLogout, activeTab, setActiveTab }) {
 
   return (
     <nav className="navbar">
-      {/* <div className="navbar-brand">A Little Something</div> */}
-      
       <div className="navbar-tabs">
         <button 
           className={`tab ${activeTab === 'affirmations' ? 'active' : ''}`}
           onClick={() => setActiveTab('affirmations')}
         >
-          Affirmations
+          💕 Affirmations
         </button>
         <button 
           className={`tab ${activeTab === 'notes' ? 'active' : ''}`}
           onClick={() => setActiveTab('notes')}
         >
-          Notes
+          📝 Notes
         </button>
         <button 
           className={`tab ${activeTab === 'tijori' ? 'active' : ''}`}
           onClick={() => setActiveTab('tijori')}
         >
-          Tijori
+          📸 Tijori
+        </button>
+        <button 
+          className={`tab ${activeTab === 'birthday' ? 'active' : ''}`}
+          onClick={() => setActiveTab('birthday')}
+        >
+          🎂 Birthday
         </button>
       </div>
 

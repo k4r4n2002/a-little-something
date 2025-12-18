@@ -48,6 +48,11 @@ const userSchema = new mongoose.Schema({
       default: Date.now
     }
   }],
+  // Birthday message (for Karan to customize)
+  birthdayMessage: {
+    type: String,
+    default: ''
+  },
   createdAt: {
     type: Date,
     default: Date.now
