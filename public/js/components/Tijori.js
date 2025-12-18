@@ -72,7 +72,7 @@ function Tijori({ username }) {
             key={idx}
           >
             <img
-              src={img.data}
+              src={img.url}
               alt={`memory ${idx + 1}`}
               className={`tijori-img ${img.uploadedBy === 'karan' ? 'border-karan' : 'border-khushi'}`}
               onClick={() => setExpanded(idx)}
@@ -98,7 +98,7 @@ function Tijori({ username }) {
 
       {expanded !== null && sortedImages[expanded] && (
         <div className="tijori-modal" onClick={() => setExpanded(null)}>
-          <img src={sortedImages[expanded].data} alt="expanded" />
+          <img src={sortedImages[expanded].url} alt="expanded" />
         </div>
       )}
     </div>

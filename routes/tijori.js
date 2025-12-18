@@ -2,6 +2,14 @@ const express = require('express');
 const router = express.Router();
 const auth = require('../middleware/auth');
 const User = require('../models/User');
+const cloudinary = require('cloudinary').v2;
+
+// Configure Cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
 
 // GET all Tijori images (from both users)
 router.get('/', auth, async (req, res) => {
@@ -37,8 +45,19 @@ router.post('/', auth, async (req, res) => {
   }
 
   try {
+    // Upload to Cloudinary
+    // Folder structure: a-little-something/karan or a-little-something/khushi
+    const result = await cloudinary.uploader.upload(image, {
+      folder: `a-little-something/${req.user.username}`,
+      resource_type: 'image',
+      transformation: [
+        { quality: 'auto', fetch_format: 'auto' } // Optimize images
+      ]
+    });
+
     const newImage = {
-      data: image,
+      url: result.secure_url,
+      publicId: result.public_id,
       uploadedBy: req.user.username,
       uploadedAt: new Date()
     };
@@ -67,6 +86,28 @@ router.post('/', auth, async (req, res) => {
     return res.json({ success: true, images: allImages });
   } catch (err) {
     console.error('Error saving Tijori image:', err);
+    return res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// DELETE a Tijori image (optional - for cleanup)
+router.delete('/:publicId', auth, async (req, res) => {
+  try {
+    const { publicId } = req.params;
+    
+    // Delete from Cloudinary
+    await cloudinary.uploader.destroy(publicId);
+    
+    // Remove from user's document
+    await User.findOneAndUpdate(
+      { username: req.user.username },
+      { $pull: { tijoriImages: { publicId } } },
+      { new: true }
+    );
+    
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Error deleting Tijori image:', err);
     return res.status(500).json({ error: 'Server error' });
   }
 });

@@ -35,10 +35,15 @@ const userSchema = new mongoose.Schema({
       default: Date.now
     }
   }],
-  // Array of images with metadata (fields not required for migration compatibility)
+  // Updated: Now stores Cloudinary URLs instead of base64
   tijoriImages: [{
-    data: {
-      type: String
+    url: {
+      type: String,
+      required: true
+    },
+    publicId: {
+      type: String,
+      required: true
     },
     uploadedBy: {
       type: String
