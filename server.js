@@ -15,10 +15,56 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
-// Increase JSON body limit to handle base64-encoded images (≈1-2 MB each)
 app.use(express.json({ limit: '10mb' }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Migration function to convert hardcoded affirmations to database
+const migrateAffirmations = async () => {
+  try {
+    const karan = await User.findOne({ username: 'karan' });
+    
+    if (!karan) {
+      console.log('⚠️  Karan user not found, skipping affirmation migration');
+      return;
+    }
+
+    // Check if affirmations already exist
+    const existingAffirmations = karan.affirmationsCreated || [];
+    const khushiAffirmations = existingAffirmations.filter(aff => aff.forUser === 'khushi');
+    
+    if (khushiAffirmations.length > 0) {
+      console.log(`✅ Found ${khushiAffirmations.length} existing affirmations for Khushi`);
+      return;
+    }
+
+    // Original hardcoded affirmations
+    const originalAffirmations = [
+      'When I finally give you the world, I\'m sure that I\'ll still owe you',
+      'If earlier I knew who you were, there would have never been a search',
+      'With the warmth of your voice, I can make it through any winter',
+      'My memories are limited but take as many as you\'d like',
+      'Meeting you was an introduction to gratitude',
+      'I\'m not sure where I\'ll end up but you feel like a destination'
+    ];
+
+    console.log('📝 Migrating original affirmations to database...');
+
+    // Add all original affirmations
+    for (const text of originalAffirmations) {
+      karan.affirmationsCreated.push({
+        text,
+        forUser: 'khushi',
+        createdAt: new Date()
+      });
+    }
+
+    await karan.save();
+    console.log(`✅ Successfully migrated ${originalAffirmations.length} affirmations for Khushi`);
+  } catch (err) {
+    console.error('❌ Error migrating affirmations:', err);
+  }
+};
 
 // Auto-setup function to create default users
 const setupDefaultUsers = async () => {
@@ -74,6 +120,9 @@ mongoose.connect(process.env.MONGODB_URI)
     
     // Auto-create users if they don't exist
     await setupDefaultUsers();
+    
+    // Migrate hardcoded affirmations to database
+    await migrateAffirmations();
   })
   .catch((err) => {
     console.error('❌ MongoDB connection error:', err);

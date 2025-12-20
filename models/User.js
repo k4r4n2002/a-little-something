@@ -58,6 +58,21 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: ''
   },
+  // NEW: Affirmations that this user has created for others
+  affirmationsCreated: [{
+    text: {
+      type: String,
+      required: true
+    },
+    forUser: {
+      type: String,
+      required: true
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now
+    }
+  }],
   createdAt: {
     type: Date,
     default: Date.now

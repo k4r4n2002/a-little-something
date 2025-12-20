@@ -141,6 +141,7 @@ function App() {
           loading={loading}
           counter={counter}
           onGetAnother={fetchAffirmation}
+          username={user.username}
         />
       )}
 
