@@ -1,5 +1,19 @@
 function Navbar({ user, onLogout, activeTab, setActiveTab }) {
   const [showTooltip, setShowTooltip] = React.useState(false);
+  const timeoutRef = React.useRef(null);
+
+  const handleMouseEnter = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    setShowTooltip(true);
+  };
+
+  const handleMouseLeave = () => {
+    timeoutRef.current = setTimeout(() => {
+      setShowTooltip(false);
+    }, 200); // 200ms delay
+  };
 
   const handleLogout = async () => {
     try {
@@ -39,15 +53,19 @@ function Navbar({ user, onLogout, activeTab, setActiveTab }) {
         </button>
       </div>
 
-      <div className="user-section">
-        <div 
-          className="user-avatar"
-          onMouseEnter={() => setShowTooltip(true)}
-          onMouseLeave={() => setShowTooltip(false)}
-        >
+      <div 
+        className="user-section"
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
+        <div className="user-avatar">
           <span className="material-icons user-icon">account_circle</span>
           {showTooltip && (
-            <div className="user-tooltip">
+            <div 
+              className="user-tooltip"
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+            >
               <div className="user-info">
                 <div className="user-name">{user.displayName || user.username}</div>
               </div>
