@@ -612,7 +612,7 @@ function Sudoku() {
   }
 
   return (
-    <div style={{ maxWidth: '600px', margin: '0 auto', padding: '1rem', textAlign: 'center' }}>
+    <div className="sudoku-container" style={{ maxWidth: '600px', margin: '0 auto', padding: '1rem', textAlign: 'center' }}>
       <h2 style={{ color: '#d1477a', marginBottom: '0.5rem' }}>
         Solve the Sudoku to Unlock! 🧩
       </h2>
@@ -620,16 +620,20 @@ function Sudoku() {
         Complete the puzzle to see today's affirmations
       </p>
       
-      <div style={{ 
-        display: 'inline-block',
-        border: '3px solid #d1477a',
-        borderRadius: '8px',
-        overflow: 'hidden',
-        marginBottom: '1rem',
-        boxShadow: '0 4px 15px rgba(255, 105, 180, 0.2)'
-      }}>
+      {/* Scrollable container for sudoku grid */}
+      <div className="sudoku-grid-container" style={{ marginBottom: '1rem' }}>
+        <div 
+          className="sudoku-grid-wrapper"
+          style={{ 
+            display: 'inline-block',
+            border: '3px solid #d1477a',
+            borderRadius: '8px',
+            overflow: 'hidden',
+            boxShadow: '0 4px 15px rgba(255, 105, 180, 0.2)'
+          }}
+        >
         {grid.map((row, rowIdx) => (
-          <div key={rowIdx} style={{ display: 'flex' }}>
+          <div key={rowIdx} className="sudoku-row" style={{ display: 'flex' }}>
             {row.map((cell, colIdx) => {
               const isInitial = initialGrid[rowIdx][colIdx] !== 0;
               const isSelected = selectedCell?.row === rowIdx && selectedCell?.col === colIdx;
@@ -637,7 +641,7 @@ function Sudoku() {
               
               return (
                 <div
-                  key={`${rowIdx}-${colIdx}`}
+                  key={`${rowIdx}-${colIdx}`} className="sudoku-cell"
                   onClick={() => handleCellClick(rowIdx, colIdx)}
                   style={{
                     width: '50px',
@@ -663,18 +667,22 @@ function Sudoku() {
           </div>
         ))}
       </div>
+      </div>
 
       <div style={{ marginBottom: '1rem' }}>
-        <div style={{ 
-          display: 'grid', 
-          gridTemplateColumns: 'repeat(5, 1fr)',
-          gap: '0.5rem',
-          maxWidth: '300px',
-          margin: '0 auto'
-        }}>
+        <div 
+          className="sudoku-number-grid"
+          style={{ 
+            display: 'grid', 
+            gridTemplateColumns: 'repeat(5, 1fr)',
+            gap: '0.5rem',
+            maxWidth: '300px',
+            margin: '0 auto'
+          }}
+        >
           {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => (
             <button
-              key={num}
+              key={num} className="sudoku-number-btn"
               onClick={() => handleNumberInput(num)}
               style={{
                 padding: '0.75rem',
@@ -691,7 +699,7 @@ function Sudoku() {
             </button>
           ))}
           <button
-            onClick={handleClear}
+            className="sudoku-clear-btn" onClick={handleClear}
             style={{
               padding: '0.75rem',
               fontSize: '1rem',
@@ -710,7 +718,7 @@ function Sudoku() {
       </div>
 
       <button
-        onClick={handleHint}
+        className="sudoku-hint-btn" onClick={handleHint}
         style={{
           marginBottom: '1rem',
           padding: '0.75rem',
@@ -727,7 +735,7 @@ function Sudoku() {
       </button>
 
       {error && (
-        <div style={{ 
+        <div className="sudoku-error" style={{ 
           color: '#ff4444', 
           marginTop: '1rem',
           padding: '0.5rem',
@@ -739,18 +747,19 @@ function Sudoku() {
         </div>
       )}
 
-      <div style={{ 
+      <div className="sudoku-tip" style={{ 
         marginTop: '1.5rem',
         padding: '1rem',
         background: 'linear-gradient(135deg, #fff0f8 0%, #ffe8f3 100%)',
         borderRadius: '12px',
         fontSize: '0.85rem',
         color: '#666',
+        textAlign: 'left',
         border: '2px solid rgba(255, 182, 193, 0.3)'
       }}>
         <p style={{ margin: 0 }}>
           💡 <strong>Tip:</strong> Click a cell, then click a number to fill it in.
-          Numbers in <strong>bold</strong> are part of the original puzzle.
+          Numbers in <strong>bold</strong> are part of the original puzzle and can't be changed.
         </p>
       </div>
     </div>
