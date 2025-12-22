@@ -27,33 +27,39 @@ function Navbar({ user, onLogout, activeTab, setActiveTab }) {
   return (
     <nav className="navbar">
       <div className="navbar-tabs">
-        <button 
+        <button
           className={`tab ${activeTab === 'affirmations' ? 'active' : ''}`}
           onClick={() => setActiveTab('affirmations')}
         >
           💕 Affirmations
         </button>
-        <button 
+        <button
           className={`tab ${activeTab === 'notes' ? 'active' : ''}`}
           onClick={() => setActiveTab('notes')}
         >
           📝 Notes
         </button>
-        <button 
+        <button
           className={`tab ${activeTab === 'tijori' ? 'active' : ''}`}
           onClick={() => setActiveTab('tijori')}
         >
           📸 Tijori
         </button>
-        <button 
+        <button
           className={`tab ${activeTab === 'birthday' ? 'active' : ''}`}
           onClick={() => setActiveTab('birthday')}
         >
           🎂 Birthday
         </button>
+        <button
+          className={`tab ${activeTab === 'milestones' ? 'active' : ''}`}
+          onClick={() => setActiveTab('milestones')}
+        >
+          ✨ Milestones
+        </button>
       </div>
 
-      <div 
+      <div
         className="user-section"
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
@@ -61,7 +67,7 @@ function Navbar({ user, onLogout, activeTab, setActiveTab }) {
         <div className="user-avatar">
           <span className="material-icons user-icon">account_circle</span>
           {showTooltip && (
-            <div 
+            <div
               className="user-tooltip"
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}

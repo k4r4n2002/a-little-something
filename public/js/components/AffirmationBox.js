@@ -692,8 +692,7 @@ function Sudoku() {
                 borderRadius: '8px',
                 cursor: 'pointer',
                 fontWeight: '600',
-                color: '#d1477a'
-              }}
+                color: '#d1477a'              }}
             >
               {num}
             </button>
@@ -709,7 +708,7 @@ function Sudoku() {
               cursor: 'pointer',
               fontWeight: '600',
               color: 'white',
-              gridColumn: 'span 2'
+              gridColumn: 'span 5'
             }}
           >
             Clear

@@ -58,7 +58,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: ''
   },
-  // NEW: Affirmations that this user has created for others
+  // Affirmations that this user has created for others
   affirmationsCreated: [{
     text: {
       type: String,
@@ -67,6 +67,38 @@ const userSchema = new mongoose.Schema({
     forUser: {
       type: String,
       required: true
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now
+    }
+  }],
+  // NEW: Milestones
+  milestones: [{
+    title: {
+      type: String,
+      required: true
+    },
+    date: {
+      type: String,
+      required: true
+    },
+    icon: {
+      type: String,
+      required: true,
+      default: '💕'
+    },
+    message: {
+      type: String,
+      required: true
+    },
+    unlocked: {
+      type: Boolean,
+      default: true
+    },
+    order: {
+      type: Number,
+      default: 999
     },
     createdAt: {
       type: Date,

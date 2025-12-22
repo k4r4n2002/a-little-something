@@ -148,6 +148,7 @@ function App() {
       {activeTab === 'notes' && <Notes username={user.username} />}
       {activeTab === 'tijori' && <Tijori username={user.username} />}
       {activeTab === 'birthday' && <Birthday />}
+      {activeTab === 'milestones' && <Milestones username={user.username} />}
     </>
   );
 }

@@ -10,6 +10,11 @@ const commonRoutes = require('./routes/common');
 const tijoriRoutes = require('./routes/tijori');
 const birthdayRoutes = require('./routes/birthday');
 const User = require('./models/User');
+// Add this with other route imports
+const milestonesRoutes = require('./routes/milestones');
+
+// Add this with other route registrations
+
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -135,6 +140,7 @@ app.use('/api', affirmationRoutes);
 app.use('/api/common', commonRoutes);
 app.use('/api/tijori', tijoriRoutes);
 app.use('/api/birthday', birthdayRoutes);
+app.use('/api/milestones', milestonesRoutes);
 
 // Serve frontend
 app.get('/', (req, res) => {
